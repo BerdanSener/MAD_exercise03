@@ -150,7 +150,7 @@ fun FavoriteIcon(
         Icon(
             modifier = Modifier.clickable {
                 onFavoriteClick() },
-            tint = MaterialTheme.colorScheme.secondary,
+            tint = Color.Red,
             imageVector =
             if (isFavorite) {
                 Icons.Filled.Favorite

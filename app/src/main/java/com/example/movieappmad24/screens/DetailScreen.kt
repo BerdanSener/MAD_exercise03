@@ -25,7 +25,7 @@ fun DetailScreen(
 ) {
 
     movieId?.let {
-        val movie = getMovies().filter { movie -> movie.id == movieId }[0]
+        val movie = viewModel.movies.filter { movie -> movie.id == movieId }[0]
 
         Scaffold (
             topBar = {
