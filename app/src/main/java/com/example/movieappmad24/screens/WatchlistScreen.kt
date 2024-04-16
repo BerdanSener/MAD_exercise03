@@ -16,7 +16,7 @@ import com.example.movieappmad24.widgets.SimpleTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WatchlistScreen(navController: NavController){
+fun WatchlistScreen(navController: NavController, viewModel: FavoriteMoviesViewModel){
     Scaffold (
         topBar = {
             SimpleTopAppBar(title = "Your Watchlist")
@@ -30,9 +30,9 @@ fun WatchlistScreen(navController: NavController){
 
         MovieList(
             modifier = Modifier.padding(innerPadding),
-            movies = FavoriteMoviesViewModel().getFavoriteMovies(getMovies()),
+            movies = viewModel.getFavoriteMovies(getMovies()),
             navController = navController,
-            viewModel = FavoriteMoviesViewModel()
+            viewModel = viewModel
             )
 
     }

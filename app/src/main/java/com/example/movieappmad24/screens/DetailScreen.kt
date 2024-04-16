@@ -19,7 +19,8 @@ import com.example.movieappmad24.widgets.SimpleTopAppBar
 @Composable
 fun DetailScreen(
     movieId: String?,
-    navController: NavController
+    navController: NavController,
+    viewModel: FavoriteMoviesViewModel
 ) {
 
     movieId?.let {
@@ -38,7 +39,7 @@ fun DetailScreen(
             }
         ){ innerPadding ->
             Column {
-                MovieRow(modifier = Modifier.padding(innerPadding), movie = movie, viewModel = FavoriteMoviesViewModel())
+                MovieRow(modifier = Modifier.padding(innerPadding), movie = movie, viewModel = viewModel)
                 HorizontalScrollableImageView(movie = movie)
             }
         }

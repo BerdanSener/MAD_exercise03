@@ -9,15 +9,17 @@ import androidx.navigation.navArgument
 import com.example.movieappmad24.screens.DetailScreen
 import com.example.movieappmad24.screens.HomeScreen
 import com.example.movieappmad24.screens.WatchlistScreen
+import com.example.movieappmad24.widgets.FavoriteMoviesViewModel
 
 @Composable
 fun Navigation() {
     val navController = rememberNavController() // create a NavController instance
+    val favoriteMoviesViewModel = FavoriteMoviesViewModel() // Add new ViewModel instance
 
     NavHost(navController = navController, // pass the NavController to NavHost
         startDestination = Screen.HomeScreen.route) {  // pass a start destination
         composable(route = Screen.HomeScreen.route){   // route with name "homescreen" navigates to HomeScreen composable
-            HomeScreen(navController = navController)
+            HomeScreen(navController = navController, viewModel = favoriteMoviesViewModel)
         }
 
         composable(
@@ -25,11 +27,11 @@ fun Navigation() {
             arguments = listOf(navArgument(name = DETAIL_ARGUMENT_KEY) {type = NavType.StringType})
         ) { backStackEntry ->
             DetailScreen(navController = navController, movieId = backStackEntry.arguments?.getString(
-                DETAIL_ARGUMENT_KEY))
+                DETAIL_ARGUMENT_KEY), viewModel = favoriteMoviesViewModel)
         }
 
         composable(route = Screen.WatchlistScreen.route){
-            WatchlistScreen(navController = navController)
+            WatchlistScreen(navController = navController, favoriteMoviesViewModel)
         }
     }
 }
