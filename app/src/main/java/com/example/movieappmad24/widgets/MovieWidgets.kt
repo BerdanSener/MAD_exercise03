@@ -57,13 +57,17 @@ import com.example.movieappmad24.navigation.Screen
 fun MovieList(
     modifier: Modifier,
     movies: List<Movie> = getMovies(),
-    navController: NavController
+    navController: NavController,
+    viewModel: FavoriteMoviesViewModel
 ){
     LazyColumn(modifier = modifier) {
         items(movies) { movie ->
-            MovieRow(movie = movie) {movieId ->
-                navController.navigate(route = Screen.DetailScreen.withId(movieId))
-            }
+            MovieRow(movie = movie,
+                onItemClick = { movieId ->
+                    navController.navigate(route = Screen.DetailScreen.withId(movieId))
+                },
+                viewModel = viewModel
+            )
         }
     }
 }
@@ -72,7 +76,8 @@ fun MovieList(
 fun MovieRow(
     modifier: Modifier = Modifier,
     movie: Movie,
-    onItemClick: (String) -> Unit = {}
+    onItemClick: (String) -> Unit = {},
+    viewModel: FavoriteMoviesViewModel
 ){
     Card(modifier = modifier
         .fillMaxWidth()
@@ -85,7 +90,7 @@ fun MovieRow(
     ) {
         Column {
 
-            MovieCardHeader(imageUrl = movie.images[0])
+            MovieCardHeader(imageUrl = movie.images[0], movie = movie, viewModel = viewModel)
 
             MovieDetails(modifier = modifier.padding(12.dp), movie = movie)
 
@@ -94,7 +99,11 @@ fun MovieRow(
 }
 
 @Composable
-fun MovieCardHeader(imageUrl: String) {
+fun MovieCardHeader(
+    imageUrl: String,
+    movie: Movie,
+    viewModel: FavoriteMoviesViewModel
+) {
     Box(
         modifier = Modifier
             .height(150.dp)
@@ -104,7 +113,10 @@ fun MovieCardHeader(imageUrl: String) {
 
         MovieImage(imageUrl)
 
-        FavoriteIcon()
+        FavoriteIcon(
+            isFavorite = viewModel.isFavorite(movie.id),
+            onToggle = { viewModel.updateFavorites(movie.id) }
+        )
     }
 }
 
@@ -124,7 +136,10 @@ fun MovieImage(imageUrl: String){
 }
 
 @Composable
-fun FavoriteIcon() {
+fun FavoriteIcon(
+    isFavorite: Boolean,
+    onToggle: () -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -132,9 +147,11 @@ fun FavoriteIcon() {
         contentAlignment = Alignment.TopEnd
     ){
         Icon(
-            tint = MaterialTheme.colorScheme.secondary,
+            tint = if (isFavorite) Color.Red else Color.Gray,
             imageVector = Icons.Default.FavoriteBorder,
-            contentDescription = "Add to favorites")
+            contentDescription = "Add to favorites",
+            modifier = Modifier.clickable { onToggle() }
+        )
     }
 }
 

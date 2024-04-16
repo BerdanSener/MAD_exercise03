@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.example.movieappmad24.models.getMovies
+import com.example.movieappmad24.widgets.FavoriteMoviesViewModel
 import com.example.movieappmad24.widgets.HorizontalScrollableImageView
 import com.example.movieappmad24.widgets.MovieRow
 import com.example.movieappmad24.widgets.SimpleTopAppBar
@@ -37,7 +38,7 @@ fun DetailScreen(
             }
         ){ innerPadding ->
             Column {
-                MovieRow(modifier = Modifier.padding(innerPadding), movie = movie)
+                MovieRow(modifier = Modifier.padding(innerPadding), movie = movie, viewModel = FavoriteMoviesViewModel())
                 HorizontalScrollableImageView(movie = movie)
             }
         }
