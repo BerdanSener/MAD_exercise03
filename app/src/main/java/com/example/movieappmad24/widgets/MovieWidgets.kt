@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -51,6 +52,7 @@ import coil.request.ImageRequest
 import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.models.getMovies
 import com.example.movieappmad24.navigation.Screen
+import com.example.movieappmad24.viewModels.FavoritMoviesViewModel
 
 
 @Composable
@@ -58,7 +60,7 @@ fun MovieList(
     modifier: Modifier,
     movies: List<Movie> = getMovies(),
     navController: NavController,
-    viewModel: FavoriteMoviesViewModel
+    viewModel: FavoritMoviesViewModel
 ){
     LazyColumn(modifier = modifier) {
         items(movies) { movie ->
@@ -66,7 +68,9 @@ fun MovieList(
                 onItemClick = { movieId ->
                     navController.navigate(route = Screen.DetailScreen.withId(movieId))
                 },
-                viewModel = viewModel
+                onFavoriteClick = {movieId ->
+                    viewModel.toggleFavoriteMovie(movieId)
+                }
             )
         }
     }
@@ -77,7 +81,7 @@ fun MovieRow(
     modifier: Modifier = Modifier,
     movie: Movie,
     onItemClick: (String) -> Unit = {},
-    viewModel: FavoriteMoviesViewModel
+    onFavoriteClick: (String) -> Unit = {}
 ){
     Card(modifier = modifier
         .fillMaxWidth()
@@ -90,7 +94,7 @@ fun MovieRow(
     ) {
         Column {
 
-            MovieCardHeader(imageUrl = movie.images[0], movie = movie, viewModel = viewModel)
+            MovieCardHeader(imageUrl = movie.images[0], isFavorite = movie.isFavorite, onFavoriteClick = { onFavoriteClick(movie.id) })
 
             MovieDetails(modifier = modifier.padding(12.dp), movie = movie)
 
@@ -101,8 +105,8 @@ fun MovieRow(
 @Composable
 fun MovieCardHeader(
     imageUrl: String,
-    movie: Movie,
-    viewModel: FavoriteMoviesViewModel
+    isFavorite: Boolean = false,
+    onFavoriteClick: () -> Unit = {}
 ) {
     Box(
         modifier = Modifier
@@ -113,10 +117,7 @@ fun MovieCardHeader(
 
         MovieImage(imageUrl)
 
-        FavoriteIcon(
-            isFavorite = viewModel.isFavorite(movie.id),
-            onToggle = { viewModel.updateFavorites(movie.id) }
-        )
+        FavoriteIcon(isFavorite = isFavorite, onFavoriteClick)
     }
 }
 
@@ -138,7 +139,7 @@ fun MovieImage(imageUrl: String){
 @Composable
 fun FavoriteIcon(
     isFavorite: Boolean,
-    onToggle: () -> Unit
+    onFavoriteClick: () -> Unit = {}
 ) {
     Box(
         modifier = Modifier
@@ -147,10 +148,17 @@ fun FavoriteIcon(
         contentAlignment = Alignment.TopEnd
     ){
         Icon(
-            tint = if (isFavorite) Color.Red else Color.Gray,
-            imageVector = Icons.Default.FavoriteBorder,
-            contentDescription = "Add to favorites",
-            modifier = Modifier.clickable { onToggle() }
+            modifier = Modifier.clickable {
+                onFavoriteClick() },
+            tint = MaterialTheme.colorScheme.secondary,
+            imageVector =
+            if (isFavorite) {
+                Icons.Filled.Favorite
+            } else {
+                Icons.Default.FavoriteBorder
+            },
+
+            contentDescription = "Add to favorites"
         )
     }
 }

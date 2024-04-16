@@ -7,14 +7,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.example.movieappmad24.models.getMovies
-import com.example.movieappmad24.widgets.FavoriteMoviesViewModel
+import com.example.movieappmad24.viewModels.FavoritMoviesViewModel
 import com.example.movieappmad24.widgets.MovieList
 import com.example.movieappmad24.widgets.SimpleBottomAppBar
 import com.example.movieappmad24.widgets.SimpleTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, viewModel: FavoriteMoviesViewModel) {
+fun HomeScreen(navController: NavController, viewModel: FavoritMoviesViewModel) {
     Scaffold (
         topBar = {
             SimpleTopAppBar(title = "Movie App")
@@ -27,7 +27,7 @@ fun HomeScreen(navController: NavController, viewModel: FavoriteMoviesViewModel)
     ){ innerPadding ->
         MovieList(
             modifier = Modifier.padding(innerPadding),
-            movies = getMovies(),
+            movies = viewModel.movies,
             navController = navController,
             viewModel = viewModel
         )

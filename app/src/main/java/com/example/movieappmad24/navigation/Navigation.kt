@@ -9,12 +9,12 @@ import androidx.navigation.navArgument
 import com.example.movieappmad24.screens.DetailScreen
 import com.example.movieappmad24.screens.HomeScreen
 import com.example.movieappmad24.screens.WatchlistScreen
-import com.example.movieappmad24.widgets.FavoriteMoviesViewModel
+import com.example.movieappmad24.viewModels.FavoritMoviesViewModel
 
 @Composable
 fun Navigation() {
     val navController = rememberNavController() // create a NavController instance
-    val favoriteMoviesViewModel = FavoriteMoviesViewModel() // Add new ViewModel instance
+    val favoriteMoviesViewModel = FavoritMoviesViewModel() // Add new ViewModel instance
 
     NavHost(navController = navController, // pass the NavController to NavHost
         startDestination = Screen.HomeScreen.route) {  // pass a start destination
