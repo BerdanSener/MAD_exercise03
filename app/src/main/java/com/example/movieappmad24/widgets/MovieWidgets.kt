@@ -1,5 +1,6 @@
 package com.example.movieappmad24.widgets
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -52,7 +53,7 @@ import coil.request.ImageRequest
 import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.models.getMovies
 import com.example.movieappmad24.navigation.Screen
-import com.example.movieappmad24.viewModels.FavoritMoviesViewModel
+import com.example.movieappmad24.viewmodels.MoviesViewModel
 
 
 @Composable
@@ -60,16 +61,17 @@ fun MovieList(
     modifier: Modifier,
     movies: List<Movie> = getMovies(),
     navController: NavController,
-    viewModel: FavoritMoviesViewModel
+    viewModel: MoviesViewModel
 ){
     LazyColumn(modifier = modifier) {
         items(movies) { movie ->
-            MovieRow(movie = movie,
-                onItemClick = { movieId ->
-                    navController.navigate(route = Screen.DetailScreen.withId(movieId))
-                },
+            MovieRow(
+                movie = movie,
                 onFavoriteClick = {movieId ->
                     viewModel.toggleFavoriteMovie(movieId)
+                },
+                onItemClick = { movieId ->
+                    navController.navigate(route = Screen.DetailScreen.withId(movieId))
                 }
             )
         }
@@ -80,8 +82,8 @@ fun MovieList(
 fun MovieRow(
     modifier: Modifier = Modifier,
     movie: Movie,
-    onItemClick: (String) -> Unit = {},
-    onFavoriteClick: (String) -> Unit = {}
+    onFavoriteClick: (String) -> Unit = {},
+    onItemClick: (String) -> Unit = {}
 ){
     Card(modifier = modifier
         .fillMaxWidth()
@@ -94,7 +96,11 @@ fun MovieRow(
     ) {
         Column {
 
-            MovieCardHeader(imageUrl = movie.images[0], isFavorite = movie.isFavorite, onFavoriteClick = { onFavoriteClick(movie.id) })
+            MovieCardHeader(
+                imageUrl = movie.images[0],
+                isFavorite = movie.isFavorite,
+                onFavoriteClick = { onFavoriteClick(movie.id) }
+            )
 
             MovieDetails(modifier = modifier.padding(12.dp), movie = movie)
 
@@ -149,8 +155,10 @@ fun FavoriteIcon(
     ){
         Icon(
             modifier = Modifier.clickable {
-                onFavoriteClick() },
-            tint = Color.Red,
+                onFavoriteClick()
+                Log.i("MovieWidget", "icon clicked")
+                                          },
+            tint = MaterialTheme.colorScheme.secondary,
             imageVector =
             if (isFavorite) {
                 Icons.Filled.Favorite
@@ -158,8 +166,7 @@ fun FavoriteIcon(
                 Icons.Default.FavoriteBorder
             },
 
-            contentDescription = "Add to favorites"
-        )
+            contentDescription = "Add to favorites")
     }
 }
 

@@ -1,19 +1,22 @@
 package com.example.movieappmad24.screens
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import com.example.movieappmad24.viewModels.FavoritMoviesViewModel
+import com.example.movieappmad24.viewmodels.MoviesViewModel
 import com.example.movieappmad24.widgets.MovieList
 import com.example.movieappmad24.widgets.SimpleBottomAppBar
 import com.example.movieappmad24.widgets.SimpleTopAppBar
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WatchlistScreen(navController: NavController, viewModel: FavoritMoviesViewModel){
+fun WatchlistScreen(
+    navController: NavController,
+    moviesViewModel: MoviesViewModel
+){
     Scaffold (
         topBar = {
             SimpleTopAppBar(title = "Your Watchlist")
@@ -24,13 +27,16 @@ fun WatchlistScreen(navController: NavController, viewModel: FavoritMoviesViewMo
             )
         }
     ){ innerPadding ->
+        // todo: create own viewModel for watchlist
+        // collect favoriteMovies accordingly
+        val moviesState by moviesViewModel.movies.collectAsState()
 
         MovieList(
             modifier = Modifier.padding(innerPadding),
-            movies = viewModel.favoriteMovies,
+            movies = moviesState,
             navController = navController,
-            viewModel = viewModel
-            )
+            viewModel = moviesViewModel
+        )
 
     }
 }
